@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Internet Speed Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        async function fetchInternetDetails() {
+            const response = await fetch('/get_internet_details');
+            const data = await response.json();
+            
+            document.getElementById('timestamp').innerText = data['Timestamp'];
+            document.getElementById('ip_address').innerText = data['IP Address'];
+            document.getElementById('isp').innerText = data['ISP'];
+            document.getElementById('city').innerText = data['City'];
+            document.getElementById('region').innerText = data['Region'];
+            document.getElementById('country').innerText = data['Country'];
+            document.getElementById('latitude').innerText = data['Latitude'];
+            document.getElementById('longitude').innerText = data['Longitude'];
+            document.getElementById('network_type').innerText = data['Network Type'];
+            document.getElementById('download_speed').innerText = data['Download Speed (Mbps)'];
+            document.getElementById('upload_speed').innerText = data['Upload Speed (Mbps)'];
+            document.getElementById('ping').innerText = data['Ping (ms)'];
+
+            // Plotting the speeds
+            const speedData = [
+                { x: ['Download Speed', 'Upload Speed', 'Ping'], y: [data['Download Speed (Mbps)'], data['Upload Speed (Mbps)'], data['Ping (ms)']], type: 'bar' }
+            ];
+            Plotly.newPlot('speedPlot', speedData);
+        }
+
+        window.onload = fetchInternetDetails;
+    </script>
+</head>
+<body>
+    <h1>Internet Speed Dashboard</h1>
+    <button onclick="fetchInternetDetails()">Refresh Internet Details</button>
+    <div>
+        <h2>Details</h2>
+        <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+        <p><strong>IP Address:</strong> <span id="ip_address"></span></p>
+        <p><strong>ISP:</strong> <span id="isp"></span></p>
+        <p><strong>City:</strong> <span id="city"></span></p>
+        <p><strong>Region:</strong> <span id="region"></span></p>
+        <p><strong>Country:</strong> <span id="country"></span></p>
+        <p><strong>Latitude:</strong> <span id="latitude"></span></p>
+        <p><strong>Longitude:</strong> <span id="longitude"></span></p>
+        <p><strong>Network Type:</strong> <span id="network_type"></span></p>
+        <h2>Speeds</h2>
+        <p><strong>Download Speed (Mbps):</strong> <span id="download_speed"></span></p>
+        <p><strong>Upload Speed (Mbps):</strong> <span id="upload_speed"></span></p>
+        <p><strong>Ping (ms):</strong> <span id="ping"></span></p>
+    </div>
+    <div id="speedPlot"></div>
+</body>
+</html>
